@@ -193,7 +193,7 @@ def test_health_does_not_expose_usage(client):
 
 @pytest.mark.parametrize(
     "path",
-    ["/", "/deck", "/pilot-tco", "/vendor-ai-review", "/vendor-ai-questionnaire",
+    ["/", "/deck", "/platform", "/pilot-tco", "/vendor-ai-review", "/vendor-ai-questionnaire",
      "/missing", "/api/health"],
 )
 def test_site_responses_prevent_search_indexing(client, path):
@@ -249,6 +249,19 @@ def test_vendor_ai_questionnaire_is_served_and_undiscoverable(served_client):
 
     landing = served_client.get("/").get_data(as_text=True)
     assert "vendor-ai-questionnaire" not in landing
+
+
+def test_platform_deck_is_served_and_undiscoverable(served_client):
+    """Unlisted platform development deck: served on request, linked from nowhere."""
+    response = served_client.get("/platform")
+    assert response.status_code == 200
+    body = response.get_data(as_text=True)
+    assert 'name="robots" content="noindex, nofollow, noarchive"' in body
+    assert "One repo to a daily delivery engine" in body
+    assert_self_contained(body)
+
+    landing = served_client.get("/").get_data(as_text=True)
+    assert "/platform" not in landing
 
 
 def test_robots_allows_crawlers_to_observe_noindex(client):
