@@ -8,6 +8,7 @@ parallel sources.
 | --- | --- | --- |
 | `brand/PITCH-DECK.html` | Canonical pitch deck | This file |
 | `site/deck.html` | Cloud Run deploy copy | `brand/PITCH-DECK.html` |
+| `site/platform.html` | Cloud Run deploy copy of the platform development deck | `PureFrontend/platform-development-deck/public.html` (outside this repo; rebuild with its `build/inline.py`) |
 | `brand/KNOWLEDGE-BASE.md` | Canonical agent knowledge base | This file |
 | `site/kb.md` | Cloud Run deploy copy | `brand/KNOWLEDGE-BASE.md` |
 | `brand/ONE-PAGER.html` | Canonical one-pager | This file |

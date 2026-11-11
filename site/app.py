@@ -477,6 +477,15 @@ def vendor_ai_review():
     return send_from_directory(app.root_path, "vendor-ai-review.html")
 
 
+@app.get("/platform")
+def platform():
+    # Unlisted, like /deck: nothing links here; the page carries noindex.
+    # Animated platform development deck (merged PRs and deploys per day by
+    # domain). Canonical source: PureFrontend/platform-development-deck
+    # (public.html, built by build/inline.py) - re-copy before each deploy.
+    return send_from_directory(app.root_path, "platform.html")
+
+
 AGENT_RULES = """# How you work on this site
 
 You run inside the chat drawer of evanfischellconsulting.com. The knowledge
