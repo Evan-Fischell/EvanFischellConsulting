@@ -264,6 +264,25 @@ def test_platform_deck_is_served_and_undiscoverable(served_client):
     assert "/platform" not in landing
 
 
+def test_platform_deck_shows_token_usage_by_model(served_client):
+    """The token slide sits on the same day axis as commits and deploys."""
+    import json
+    import re
+
+    body = served_client.get("/platform").get_data(as_text=True)
+    assert 'data-id="tokens"' in body
+    assert 'id="tkTop"' in body and 'id="tkSvg"' in body
+    raw = re.search(r'<script id="deck-data" type="application/json">(.*?)</script>', body, re.S).group(1)
+    data = json.loads(raw.replace(r"<\/", "</"))
+    tok = data["tok"]
+    assert tok["f"], "at least one model family"
+    for fam in tok["f"]:
+        series = tok["s"][fam["k"]]
+        assert len(series) == len(data["days"])
+        assert all(isinstance(v, int) and v >= 0 for v in series)
+    assert tok["from"] in data["days"]
+
+
 def test_robots_allows_crawlers_to_observe_noindex(client):
     response = client.get("/robots.txt")
     assert response.status_code == 200
